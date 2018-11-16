@@ -44,6 +44,8 @@ install:
     - conda install -n root --quiet --yes gdal swig
     - python -m pip install --upgrade pip
     - python -m pip install -r requirements-dev.txt coveralls coverage
+    # install official python bindings to libgdal
+    - pip install --global-option=build_ext --global-option="$(gdal-config --cflags)" gdal==$(gdal-config --version)
     - python setup.py install
 
 # Skip .NET project specific build phase.

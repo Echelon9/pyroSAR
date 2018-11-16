@@ -4,6 +4,7 @@ numpy
 scoop
 spatialist>=0.2.6
 pyyaml
+#gdal
 
 #Testing requirements
 pytest

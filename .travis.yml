@@ -1,5 +1,6 @@
 language: python
 sudo: required
+dist: xenial
 cache:
   directories:
     - ~/.cache/pip
@@ -16,19 +17,19 @@ addons:
       - sourceline: 'ppa:ubuntugis/ppa'
     packages:
       - libgdal-dev
+      - gdal-bin
       - libudunits2-dev
-      - python-gdal
-      - python3-gdal
       - libspatialite-dev
+      - libsqlite3-mod-spatialite
       - swig2.0
       - libproj-dev
-      - gdal-bin
 
 python:
+  - '3.7'
+  - '3.6'
+  - '3.5'
   - '3.4'
-
-virtualenv:
-  system_site_packages: true
+  - '2.7'
 
 before_install:
   - wget -O esa-snap_sentinel_unix_6_0.sh https://step.esa.int/downloads/6.0/installers/esa-snap_sentinel_unix_6_0.sh
@@ -37,6 +38,11 @@ before_install:
 
 install:
   - pip install -r requirements.txt
+  # install official python bindings to libgdal
+  - export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:/usr/include/gdal
+  - export C_INCLUDE_PATH=$C_INCLUDE_PATH:/usr/include/gdal
+  - pip install --global-option=build_ext --global-option="$(gdal-config --cflags)" gdal==$(gdal-config --version)
+  # install code coverage tools
   - pip install coveralls coverage
   - python setup.py install
 

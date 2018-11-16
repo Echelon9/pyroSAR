@@ -54,15 +54,13 @@ If you are using Windows, the easiest way to work with pyroSAR and Python in gen
 [Anaconda](https://www.anaconda.com/download/). It comes with all basic requirements of pyroSAR.
 The more specific instructions below are intended for Linux users.
 ### GDAL
-pyroSAR requires GDAL version 2.1 with GEOS and PROJ4 as dependencies as well as the GDAL Python binding. 
-Alternatively, one can use <a href="https://github.com/nextgis/pygdal">pygdal</a>, 
-a virtualenv and setuptools friendly version of standard GDAL python bindings.
+pyroSAR requires libgdal-dev version 2.1 with GEOS, PROJ4 and numpy as dependencies as well as the GDAL Python binding.
 #### Ubuntu
-Starting with release Yakkety (16.10), Ubuntu comes with GDAL >2.1. 
+Starting with release Yakkety (16.10), Ubuntu comes with libgdal-dev >2.1.
 See <a href="https://launchpad.net/ubuntu/yakkety/amd64/gdal-bin">here</a>. 
 You can install it like this:
 ```bash
-sudo apt-get install python-gdal python3-gdal gdal-bin
+sudo apt-get install libgdal-dev gdal-bin
 ```
 For older Ubuntu releases you can add the ubuntugis repository to apt prior to installation to install version >2.1:
 ```sh
@@ -75,11 +73,19 @@ You can check the version by typing:
 gdalinfo --version
 ```
 #### Debian
-Starting with Debian 9 (Stretch) GDAL is available in version >2.1 in the official repository.
+Starting with Debian 9 (Stretch) libgdal-dev is available in version >2.1 in the official repository.
 #### Building from source
-Alternatively, you can build GDAL and the dependencies from source. The script `pyroSAR/install/install_deps.sh` 
+Alternatively, you can build libgdal-dev and the dependencies from source. The script `pyroSAR/install/install_deps.sh`
 gives specific instructions on how to do it. It is not yet intended to run this script via shell, but rather to 
 follow the instructions step by step.
+### Python GDAL bindings
+The recommended path, which works both within and outside a virtualenv, is to install Python GDAL bindings via pip.
+Note: The version number dependency between libgdal-dev and Python bindings is addressed with `gdal==$(gdal-config --version)`
+```bash
+pip install --global-option=build_ext --global-option="$(gdal-config --cflags)" gdal==$(gdal-config --version)
+```
+We DO NOT recommend using the unofficial pygdal Python package, it has packaging problems, does not work with
+Python 3 and appears to lack proper open source licensing.
 ### SQLite + SpatiaLite
 While sqlite3 and its Python binding are usually already installed, the spatialite extension needs to be 
 added. Two packages exist, libspatialite and mod_spatialite. Both can be used by pyroSAR.
